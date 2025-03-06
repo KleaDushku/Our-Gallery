@@ -1,100 +1,133 @@
+// pages/index.tsx
 import Image from "next/image";
+import fs from "node:fs/promises";
+import Link from "next/link";
+import "font-awesome/css/font-awesome.min.css";
 
-export default function Home() {
+export default async function Home() {
+  const files = await fs.readdir("./public/assets");
+  const images = files.map((file) => `/assets/${file}`);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div>
+      {/* Navbar */}
+      <nav className="bg-gray-800 p-4">
+        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+          <h1 className="text-3xl text-white font-bold">Our Gallery</h1>
+          <Link
+            href="/upload"
+            className="py-2 px-4 bg-gray-400 hover:bg-blue-900 text-white rounded"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Upload Your Image
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </nav>
+
+      {/* Hero Section with Custom Background Image */}
+      <section
+        className="relative h-screen bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/assets/10.jpg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black opacity-50"></div>{" "}
+        {/* Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center text-center text-white z-10">
+          <h2 className="text-5xl font-bold">
+            Photographs Captured by Our Talented Photographers
+          </h2>
+        </div>
+      </section>
+
+      {/* Small Image Carousel Section */}
+      <div className="max-w-screen-lg mx-auto py-14">
+        <h3 className="text-3xl font-bold text-center mb-8">
+          Our Featured Gallery
+        </h3>
+        <p className="text-lg text-center mb-12">
+          Our photography page is a space where you can enjoy the impressive
+          work of our talented photographers.
+          <br /> Each image tells its own story, captured at the perfect moment
+          through the lens of a professional photographer.
+          <br />
+          Hover over each image to learn more about the story behind it and the
+          creative process.
+        </p>
+        <div className="flex overflow-x-auto space-x-4">
+          {images.map((image, index) => {
+            const imageName = image.split("/").pop()?.split(".")[0]; // Extract the image filename without extension
+            return (
+              <div
+                key={index}
+                className="relative w-48 h-48 bg-gray-200 rounded-md overflow-hidden shadow-md group"
+              >
+                <Image
+                  src={image}
+                  alt={`Uploaded Image ${index}`}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-md group-hover:opacity-80 transition-opacity duration-300"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 text-white">
+                  <span className="text-xl font-bold"> {imageName}</span>{" "}
+                  {/* Display image filename */}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Images Grid Section */}
+      <div className="max-w-screen-lg mx-auto py-14">
+        <div className="flex items-end justify-between">
+          <h1 className="text-4xl font-bold text-gray-800">Our Gallery</h1>
+          <Link
+            href="/upload"
+            className="py-3 px-6 bg-gray-600 hover:bg-blue-900 text-white rounded-md transition duration-300 ease-in-out"
+          >
+            Upload Your Image
+          </Link>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5 mt-10">
+          {images.map((image) => (
+            <div
+              key={image}
+              className="max-w-sm border border-gray-300 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="relative aspect-video overflow-hidden rounded-t-lg">
+                <Image
+                  src={image}
+                  alt={image}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Seksioni i Kontaktit */}
+      <div className="max-w-screen-lg mx-auto py-10 bg-gray-100">
+        <h3 className="text-3xl font-bold text-center mb-8">
+          Contact Our Photographers
+        </h3>
+        <p className="text-lg text-center mb-12">
+          If you would like to collaborate with one of our photographers on a
+          project, feel free to reach out to us.
+          <br />
+          Contact us for more details and pricing.
+        </p>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-6">
+        <div className="max-w-screen-xl mx-auto text-center">
+          <p>&copy; 2025 Our Gallery. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
