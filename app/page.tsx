@@ -1,8 +1,9 @@
-// pages/index.tsx
+// app/page.tsx
 import Image from "next/image";
 import fs from "node:fs/promises";
 import Link from "next/link";
 import "font-awesome/css/font-awesome.min.css";
+import Notification from "@/components/Notification";
 
 export default async function Home() {
   const files = await fs.readdir("./public/assets");
@@ -11,17 +12,22 @@ export default async function Home() {
   return (
     <div>
       {/* Navbar */}
-      <nav className="bg-gray-800 p-4">
-        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl text-white font-bold">Our Gallery</h1>
-          <Link
-            href="/upload"
-            className="py-2 px-4 bg-gray-400 hover:bg-blue-900 text-white rounded"
-          >
-            Upload Your Image
-          </Link>
-        </div>
-      </nav>
+     
+
+<nav className="bg-gray-800 p-4">
+  <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+    <h1 className="text-3xl text-white font-bold">Our Gallery</h1>
+    <div className="flex items-center space-x-4">
+      <Link
+        href="/upload"
+        className="py-2 px-4 bg-gray-400 hover:bg-blue-900 text-white rounded"
+      >
+        Upload Your Image
+      </Link>
+      <Notification />
+    </div>
+  </div>
+</nav>
 
       {/* Hero Section with Custom Background Image */}
       <section
@@ -55,7 +61,7 @@ export default async function Home() {
         </p>
         <div className="flex overflow-x-auto space-x-4">
           {images.map((image, index) => {
-            const imageName = image.split("/").pop()?.split(".")[0]; // Extract the image filename without extension
+            const imageName = image.split("/").pop()?.split(".")[0]; // do Extract the image filename without extension
             return (
               <div
                 key={index}
@@ -132,3 +138,4 @@ export default async function Home() {
     </div>
   );
 }
+
